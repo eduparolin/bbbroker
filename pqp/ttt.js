@@ -7,9 +7,15 @@ function compare(date, count) {
     let params = [date];
     moDb.runQuery(query, params, logger, 'compare')
         .then(data => {
-	    console.log(count, data[0]);
-            if(data[0]){
-               setTimeout(compare.bind(null, data[0].DT_ENVIO_MOES, ++count));
+            console.log(count, data[0].DT_ENVIO_MOES);
+            if (data[0]) {
+                checkId(data[0].ID_MO_MOES)
+                    .then((rData) => {
+                        if(!rData[0]) {
+                            console.log('>>>>>>>>>>>>ID', data[0].ID_MO_MOES)
+                        }
+                    });
+                setTimeout(compare.bind(null, data[0].DT_ENVIO_MOES, ++count));
             }
         })
 }
@@ -17,12 +23,18 @@ function compare(date, count) {
 function getFirst() {
     let query = 'select MIN(DT_ENVIO_MOES) as min from MO_ESMS where DT_ENVIO_MOES BETWEEN \'2018-11-14\' AND \'2018-11-15\' AND CD_ROTA_MOES = 20000 ORDER BY DT_ENVIO_MOES ASC LIMIT 1;';
     let params = [];
-    return moDb.runQuery(query, params, logger, compare);
+    return moDb.runQuery(query, params, logger, 'getFirst');
+}
+
+function checkId(id) {
+    let query = 'select * from messages where id_mo = ?';
+    let params = [id];
+    return filterDb.runQuery(query, params, logger, 'checkId');
 }
 
 getFirst()
-.then(resp => {
-    console.log(resp[0].min)
-    compare(resp[0].min, 0);
-})
-.catch(console.log);
+    .then(resp => {
+        console.log(resp[0].min);
+        compare(resp[0].min, 0);
+    })
+    .catch(console.log);
