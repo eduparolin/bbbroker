@@ -18,7 +18,7 @@ function getIdFilter(date, counter) {
                 promises.push(checkId(r.id_mo)
                     .then(moR => {
                         if (String(moR[0].CD_ROTA_MOES) !== String(r.route)) {
-                            console.log('>>>>OOOPS', r.id_mo);
+                            console.log('>>>>OOOPS', r.id_mo, moR[0].CD_ROTA_MOES);
                         }
                         // if (!moR[0]) {
                         //     console.log('>>>>OOOPS', r.id_mo);
