@@ -41,6 +41,7 @@ function getIdFilter(date, counter) {
             }
             Promise.all(promises)
                 .then(_ => {
+                    console.log(campaings);
                     if (resp[0]) {
                         console.log(counter);
                         console.log(resp[resp.length - 1].created_at);
