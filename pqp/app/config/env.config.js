@@ -16,7 +16,7 @@ module.exports = {
     },
     "mysql_pool": {
         connectionLimit : 20,
-        host            : '10.150.30.76',
+        host            : 'dbslprd00.pgd.plus',
         port            : 3306,
         user            : 'gestao_fornecedores',
         password        : 'PG&1453490gf',
