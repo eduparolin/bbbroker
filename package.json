@@ -1,0 +1,67 @@
+{
+  "name": "pg013-broker-oi",
+  "version": "1.0.0",
+  "pipelineVersion": "0000001-staging",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=html --reporter=text mocha modules/**/*.test.js",
+    "e2e": "nyc --reporter=html --reporter=text mocha modules/**/*.e2e.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/tunts/DCFTG/backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/tunts/DCFTG/backend/issues"
+  },
+  "homepage": "https://gitlab.com/tunts/DCFTG/backend#README",
+  "dependencies": {
+    "bunyan": "^1.8.8",
+    "bunyan-elasticsearch": "^1.0.0",
+    "chronographjs": "^0.1.3",
+    "command-line-args": "^4.0.6",
+    "elasticsearch": "^13.3.1",
+    "elasticsearch-streams": "0.0.10",
+    "jqueue": "^1.0.0",
+    "js2xmlparser": "^3.0.0",
+    "jsonschema": "^1.2.0",
+    "jsonwebtoken": "^7.4.3",
+    "modesl": "^1.2.0",
+    "moment": "^2.22.2",
+    "mysql": "^2.12.0",
+    "mysql2": "^1.5.3",
+    "promise-mysql": "^3.0.1",
+    "q": "^1.5.0",
+    "qs": "^6.5.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "restify": "^4.3.0",
+    "sequelize": "^4.38.0",
+    "sync-request": "^4.1.0",
+    "tnt-scheduler": "^1.1.1",
+    "uuid": "^3.1.0",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.24"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^5.2.0",
+    "grunt": "^1.0.1",
+    "grunt-mocha-istanbul": "^5.0.2",
+    "grunt-mocha-test": "^0.13.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2",
+    "mock-require": "^3.0.2",
+    "nyc": "^12.0.2",
+    "proxyquire": "^2.0.1",
+    "sequelize-mock": "^0.10.2",
+    "sinon": "^2.4.1",
+    "sinon-chai": "^3.2.0",
+    "supertest": "^3.1.0"
+  }
+}
