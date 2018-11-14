@@ -31,7 +31,7 @@ function getFirst() {
     return moDb.runQuery(query, params, logger, 'getFirst');
 }
 
-function getIdFilter(date) {
+function getIdFilter(date, counter) {
     let query = 'select id_mo, created_at from messages where created_at BETWEEN \'2018-11-14\' AND \'2018-11-15\' and created_at > ? ORDER BY created_at ASC LIMIT 1000;';
     let params = [date];
     return filterDb.runQuery(query, params, logger, 'getIdFilter')
@@ -46,9 +46,12 @@ function getIdFilter(date) {
                     })
                     .catch(console.log)
             }
-
-            setTimeout(getIdFilter.bind(null, resp[resp.length-1].created_at));
-        })
+if(resp[0]){
+console.log(counter);            
+console.log(resp[resp.length-1].created_at);
+            setTimeout(getIdFilter.bind(null, resp[resp.length-1].created_at, ++counter));
+}        
+})
 }
 
 function checkId(id) {
@@ -60,6 +63,6 @@ function checkId(id) {
 getFirstF()
     .then(resp => {
         console.log(resp[0].min);
-        getIdFilter(resp[0].min);
+        getIdFilter(resp[0].min, 0);
     })
     .catch(console.log);
