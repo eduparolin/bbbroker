@@ -2,6 +2,8 @@ const moDb = require('./app/common/services/database.service');
 const filterDb = require('./app/common/services/filter.database.service');
 const logger = require('./app/common/services/log.service');
 
+let campaings = [];
+
 function getFirstF() {
     let query = 'select MIN(created_at) as min from messages where created_at BETWEEN \'2018-11-14\' AND \'2018-11-15\' ORDER BY created_at ASC LIMIT 1;';
     let params = [];
@@ -18,6 +20,11 @@ function getIdFilter(date, counter) {
                 promises.push(checkId(r.id_mo)
                     .then(moR => {
                         if (String(moR[0].CD_ROTA_MOES) !== String(r.route)) {
+                            if(campaings[moR[0].ID_CAMPANHA_MOES]) {
+                                campaings[moR[0].ID_CAMPANHA_MOES] = campaings[moR[0].ID_CAMPANHA_MOES] + 1
+                            } else {
+                                campaings[moR[0].ID_CAMPANHA_MOES] = 1;
+                            }
                             console.log('>>>>OOOPS', r.id_mo, moR[0].CD_ROTA_MOES);
                         }
                         // if (!moR[0]) {
@@ -34,13 +41,15 @@ function getIdFilter(date, counter) {
                         console.log(counter);
                         console.log(resp[resp.length - 1].created_at);
                         setTimeout(getIdFilter.bind(null, resp[resp.length - 1].created_at, ++counter));
+                    } else {
+                        console.log(campaings);
                     }
                 });
         })
 }
 
 function checkId(id) {
-    let query = 'select ID_MO_MOES, ST_MO_MOES, CD_ROTA_MOES, DT_ENVIO_MOES FROM esms.MO_ESMS WHERE ID_MO_MOES = ?';
+    let query = 'select ID_MO_MOES, ST_MO_MOES, CD_ROTA_MOES, DT_ENVIO_MOES, ID_CAMPANHA_MOES FROM esms.MO_ESMS WHERE ID_MO_MOES = ?';
     let params = [id];
     return moDb.runQuery(query, params, logger, 'checkId');
 }
