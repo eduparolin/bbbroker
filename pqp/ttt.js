@@ -9,17 +9,22 @@ function getFirstF() {
 }
 
 function getIdFilter(date, counter) {
-    let query = 'select id_mo, created_at from messages where created_at BETWEEN \'2018-11-14\' AND \'2018-11-15\' and created_at > ? ORDER BY created_at ASC LIMIT 1000;';
+    let query = 'select id_mo, created_at, route from messages where created_at BETWEEN \'2018-11-14\' AND \'2018-11-15\' and created_at > ? ORDER BY created_at ASC LIMIT 1000;';
     let params = [date];
     return filterDb.runQuery(query, params, logger, 'getIdFilter')
         .then(resp => {
-            let promises = []
+            let promises = [];
             for (let r of resp) {
                 promises.push(checkId(r.id_mo)
                     .then(moR => {
-                        if (!moR[0]) {
+                        if (String(moR[0].CD_ROTA_MOES) !== String(r.route)) {
                             console.log('>>>>OOOPS', r.id_mo);
                         }
+                        // if (!moR[0]) {
+                        //     console.log('>>>>OOOPS', r.id_mo);
+                        // } else {
+                        //     console.log('AAAAAA: ', moR[0].CD_ROTA_MOES, 'BBBBBB: ', r.route);
+                        // }
                         return Promise.resolve();
                     }))
             }
