@@ -2,22 +2,27 @@ const moDb = require('./app/common/services/database.service');
 const filterDb = require('./app/common/services/filter.database.service');
 const logger = require('./app/common/services/log.service');
 
-function compare(date, count) {
-    let query = 'select ST_MO_MOES, CD_ROTA_MOES, DT_ENVIO_MOES, ID_MO_MOES from MO_ESMS where DT_ENVIO_MOES BETWEEN \'2018-11-14\' AND \'2018-11-15\' AND CD_ROTA_MOES = 20000 and DT_ENVIO_MOES > ? ORDER BY DT_ENVIO_MOES ASC LIMIT 1;';
-    let params = [date];
-    moDb.runQuery(query, params, logger, 'compare')
-        .then(data => {
-            console.log(count, data[0].DT_ENVIO_MOES);
-            if (data[0]) {
-                checkId(data[0].ID_MO_MOES)
-                    .then((rData) => {
-                        if(!rData[0]) {
-                            console.log('>>>>>>>>>>>>ID', data[0].ID_MO_MOES)
-                        }
-                    });
-                setTimeout(compare.bind(null, data[0].DT_ENVIO_MOES, ++count));
-            }
-        })
+async function compare(date) {
+    let moData = await getId(date);
+    for (let d of moData) {
+
+    }
+
+    if (data[0]) {
+        checkId(data[0].ID_MO_MOES)
+            .then((rData) => {
+                if (!rData[0]) {
+                    console.log('>>>>>>>>>>>>ID', data[0].ID_MO_MOES)
+                }
+            });
+        setTimeout(compare.bind(null, data[0].DT_ENVIO_MOES));
+    }
+}
+
+function getFirstF() {
+    let query = 'select MIN(created_at) as min from messages where created_at BETWEEN \'2018-11-14\' AND \'2018-11-15\' ORDER BY created_at ASC LIMIT 1;';
+    let params = [];
+    return filterDb.runQuery(query, params, logger, 'getFirst');
 }
 
 function getFirst() {
@@ -26,15 +31,35 @@ function getFirst() {
     return moDb.runQuery(query, params, logger, 'getFirst');
 }
 
-function checkId(id) {
-    let query = 'select * from messages where id_mo = ?';
-    let params = [id];
-    return filterDb.runQuery(query, params, logger, 'checkId');
+function getIdFilter(date) {
+    let query = 'select id_mo, created_at from messages where created_at BETWEEN \'2018-11-14\' AND \'2018-11-15\' and created_at > ? ORDER BY created_at ASC LIMIT 1000;';
+    let params = [date];
+    return filterDb.runQuery(query, params, logger, 'getIdFilter')
+        .then(resp => {
+            for(let r of resp) {
+                //console.log(r);
+                checkId(r.id_mo)
+                    .then(moR => {
+                        if(!moR[0]) {
+                            console.log('>>>>OOOPS', r.id_mo);
+                        }
+                    })
+                    .catch(console.log)
+            }
+
+            setTimeout(getIdFilter.bind(null, resp[resp.length-1].created_at));
+        })
 }
 
-getFirst()
+function checkId(id) {
+    let query = 'select ID_MO_MOES, ST_MO_MOES, CD_ROTA_MOES, DT_ENVIO_MOES FROM esms.MO_ESMS WHERE ID_MO_MOES = ?';
+    let params = [id];
+    return moDb.runQuery(query, params, logger, 'checkId');
+}
+
+getFirstF()
     .then(resp => {
         console.log(resp[0].min);
-        compare(resp[0].min, 0);
+        getIdFilter(resp[0].min);
     })
     .catch(console.log);
