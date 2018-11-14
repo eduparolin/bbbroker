@@ -20,10 +20,14 @@ function getIdFilter(date, counter) {
                 promises.push(checkId(r.id_mo)
                     .then(moR => {
                         if (String(moR[0].CD_ROTA_MOES) !== String(r.route)) {
-                            if(campaings[moR[0].ID_CAMPANHA_MOES]) {
-                                campaings[moR[0].ID_CAMPANHA_MOES] = campaings[moR[0].ID_CAMPANHA_MOES] + 1
+                            let strC = String(moR[0].ID_CAMPANHA_MOES);
+                            if(campaings[strC]) {
+                                campaings[strC].qty = campaings[strC].qty + 1
                             } else {
-                                campaings[moR[0].ID_CAMPANHA_MOES] = 1;
+                                campaings[strC] = {
+                                    qty: 1,
+                                    rota: moR[0].CD_ROTA_MOES
+                                };
                             }
                             console.log('>>>>OOOPS', r.id_mo, moR[0].CD_ROTA_MOES);
                         }
